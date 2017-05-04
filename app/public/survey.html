@@ -48,7 +48,6 @@
         <option value="5">5 (Strongly Agree)</option>
     </select>
 
-
     <h3><strong>Question 3</strong></h3>
     <h4>You find it difficult to speak loudly.</h4>
     <select data-placeholder="" class="chosen-select" id="q3">
@@ -59,7 +58,6 @@
         <option value="4">4</option>
         <option value="5">5 (Strongly Agree)</option>
     </select>
-
 
     <h3><strong>Question 4</strong></h3>
     <h4>You are more inclined to experiment than to follow familiar approaches.</h4>
@@ -72,7 +70,6 @@
         <option value="5">5 (Strongly Agree)</option>
     </select>
 
-
     <h3><strong>Question 5</strong></h3>
     <h4>When with a group of people, you enjoy being directly involved and being at the center of attention.</h4>
     <select data-placeholder="" class="chosen-select" id="q5">
@@ -84,7 +81,6 @@
         <option value="5">5 (Strongly Agree)</option>
     </select>
 
-
     <h3><strong>Question 6</strong></h3>
     <h4>You feel that the world is founded on compassion.</h4>
     <select data-placeholder="" class="chosen-select" id="q6">
@@ -95,7 +91,6 @@
         <option value="4">4</option>
         <option value="5">5 (Strongly Agree)</option>
     </select>
-
 
     <h3><strong>Question 7</strong></h3>
     <h4>When making a decision, you rely more on your feelings than on analysis of the situation.</h4>
@@ -164,11 +159,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h2 class="modal-title"><strong>Best Match</strong></h2>
+                <h2 class="modal-title"><strong>Your Perfect Friend-Match is:</strong></h2>
             </div>
             <div class="modal-body">
-                <h2 id="matchName"></h2>
-                <!--<img id="matchImg" src="https://media.licdn.com/mpr/mpr/shrinknp_400_400/p/6/005/064/1bd/3435aa3.jpg" alt="">-->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -180,18 +173,15 @@
 
 <script type="text/javascript">
 
-//    // Chosen CSS
-//    var config = {
-//        '.chosen-select'           : {},
-//        '.chosen-select-deselect'  : {allow_single_deselect:true},
-//        '.chosen-select-no-single' : {disable_search_threshold:10},
-//        '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
-//        '.chosen-select-width'     : {width:"95%"}
-//    }
-//    for (var selector in config) {
-//        $(selector).chosen(config[selector]);
-//    }
-//
+    var isValid = true;
+
+
+    $(".form-control").each(function () {
+        var userResponse = $(this).val().trim();
+        if(userResponse === ""){
+            isFormValid = false;
+        }
+    });
     // Capture the form inputs
     $("#submit").on("click", function(){
 
@@ -212,32 +202,28 @@
         }
 
         // If all required fields are filled
-        if (validateForm() == true)
+        if (validateForm() === true)
         {
             // Create an object for the user's data
             var userData = {
                 name: $("#name").val(),
                 photo: $("#photo").val(),
-                scores: [$("#q1").val(), $("#q2").val(), $("#q3").val(), $("#q4").val(), $("#q5").val(), $("#q6").val(), $("#q7").val(), $("#q8").val(), $("#q9").val(), $("#q10").val(), ]
+                scores: [$("#q1").val(), $("#q2").val(), $("#q3").val(), $("#q4").val(), $("#q5").val(), $("#q6").val(), $("#q7").val(), $("#q8").val(), $("#q9").val(), $("#q10").val() ]
             };
 
             console.log('userData: ', userData);
 
-
-            // Grab the URL of the website
-            var currentURL = window.location.origin;
-
-            // AJAX post the data to the friends API.
-            $.post("/api/friends", userData, function(data){
-
-                // Grab the result from the AJAX post so that the best match's name and photo are displayed.
-                $("#matchName").text(data.name);
-                $('#matchImg').attr("src", data.photo);
-
-                // Show the modal with the best match
-                $("#resultsModal").modal('toggle');
-
+            $.post(location.origin + "/api/friends", userData, function (data) {
+                console.log(data);
+                modalDisplay(data);
             });
+
+            function modalDisplay(match) {
+                $(".modal-body").append("<p>" + match.name + "</p>")
+                    .append('<img src="' + match.photo + '"/>');
+                $("#resultsModal").modal("show");
+            };
+
         }
         else
         {
