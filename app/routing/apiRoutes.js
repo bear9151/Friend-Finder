@@ -13,19 +13,19 @@ module.exports = function (app) {
 
 // Logic to find closest match for new survey user
     app.post("/api/friends", function (req, res) {
-        friendsData.push(req.body);
-        let userScore = friendsData[friendsData.length - 1].scores,
-            matchIndex;
 
-        for (let i = 0; i < friendsData.length - 1; i++) {
-            let matchCount = 100,
-                total = 0;
-            for (let j in friendsData[i].scores) {
-                total += Math.abs(parseInt(friendsData[i].scores[j]) - parseInt(userScore[j]));
-            }
-            if (total < matchCount) matchIndex = i;
-        }
-        res.json(friendsData[matchIndex]);
+        friendsData.push(req.body); // Pushing new survey results to the api object
+
+        var userScores = friendsData[friendsData.length - 1].scores; // Assigning a variable for logic use
+
+        for (var i = 0; userScores.length > i; i++) {
+            userScores[i] = parseInt(userScores[i]);
+        } // This is a for loop to parse the entire array from strings into integers, for comparison with the api data
+
+        var matchPoints = 100;
+
+
+        // res.json(friendsData[3]);
     });
 
 };
