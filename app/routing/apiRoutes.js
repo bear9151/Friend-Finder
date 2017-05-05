@@ -11,21 +11,37 @@ module.exports = function (app) {
         res.json(friendsData);
     });
 
-// Logic to find closest match for new survey user
+    // Logic to find closest match for new survey user
     app.post("/api/friends", function (req, res) {
 
-        friendsData.push(req.body); // Pushing new survey results to the api object
+    // New Variable to hold the current bestMatch, as the logic below loops through all friends
+    var bestMatch = {name: "", photo: "", scores: [], diff: 1000},
+        surveyObj = req.body,
+        difference = 0;
 
-        var userScores = friendsData[friendsData.length - 1].scores; // Assigning a variable for logic use
+    // For loop to parse survey score string into integers for comparison
+    for (var i = 0; i < surveyObj.scores.length; i++) {
+        surveyObj.scores[i] = parseInt(surveyObj.scores[i]);
+    }
 
-        for (var i = 0; userScores.length > i; i++) {
-            userScores[i] = parseInt(userScores[i]);
-        } // This is a for loop to parse the entire array from strings into integers, for comparison with the api data
+    // For loop to loop through each friend in JSON data, another for loop inside to loop through each question and get absolute value
+    for (var i = 0; i < friendsData.length; i++) {
+        for (var j = 0; j < friendsData[i].scores.length; j++) {
+            difference = difference + (Math.abs(surveyObj.scores[j] - friendsData[i].scores[j]));
+        }
+        // If the current friend beats the current best match, then rewrite the object with the new friend data
+        if (bestMatch.diff >= difference) {
+            bestMatch.name = friendsData[i].name;
+            bestMatch.photo = friendsData[i].photo;
+            bestMatch.scores = friendsData[i].scores;
+            bestMatch.diff = difference;
+        }
+        // Set the difference back to zero to compare the next friend.
+        difference = 0;
+    }
 
-        var matchPoints = 100;
-
-
-        // res.json(friendsData[3]);
+    // Send the result to the front end, passing through the lasting bestMatch object
+    res.json(bestMatch);
     });
 
 };
