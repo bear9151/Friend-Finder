@@ -1,5 +1,7 @@
 # Friend-Finder
 
+#### Friend-Finder is a fun new way to find a friend. Fill out the survey, and watch your perfect match appear!
+
 ### Instructions and Installation
 1. Clone the GitHub Repository to your local machine.
 2. Navigate to the directory in your terminal or other command line tool.
