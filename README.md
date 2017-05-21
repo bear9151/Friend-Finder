@@ -9,6 +9,6 @@
 4. Use node to run `server.js` to start the application. In your terminal, you will get a connection message.
 
 ### Assignment
-* This assignment is part of the UCF Coding Bootcamp, and focuses on the following languages/skills:
+* This [assignment](01-2017-VW-Class-Content/Homework/Week-13/Instructions/homework_instructions.md) is part of the UCF Coding Bootcamp, and focuses on the following languages/skills:
   * NPM
   * Express Routing
